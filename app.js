@@ -1,6 +1,6 @@
 const STORAGE_KEY = "zouzhe-app-v2";
 const LEGACY_KEY = "zouzhe-app-v1";
-const APP_VERSION = "v2.3.0";
+const APP_VERSION = "v2.3.1";
 const GOOGLE_SYNC_URL = "https://script.google.com/macros/s/AKfycbyKLJBTYBCkSj2n1yjA2jhAzYypwF_dOSUO0K7nqVBFvF_AQQN-L5taueu0iAmbjy4L/exec";
 
 const blockOptions = [
@@ -707,6 +707,41 @@ function deleteClient() {
   persist();
   render();
   showToast("已刪除個案");
+}
+
+function deleteReviewClient() {
+  const client = state.clients.find((item) => item.id === reviewClientId);
+  if (!client) return;
+  const code = client.fields.clientCode || "";
+  if (!code) {
+    showToast("此個案缺少代號，未刪除");
+    return;
+  }
+  const label = code || client.fields.clientName || "這位個案";
+  const sessionCount = client.sessions?.length || 0;
+  const typed = prompt(`確定刪除「${label}」與全部 ${sessionCount} 次諮詢紀錄？\n\n若要刪除，請輸入個案代號：${code}`);
+
+  if (typed === null) return;
+  if (typed.trim() !== code) {
+    showToast("個案代號不一致，未刪除");
+    return;
+  }
+
+  state.clients = state.clients.filter((item) => item.id !== client.id);
+  activeClientId = null;
+  activeSessionId = null;
+  reviewClientId = null;
+  reviewSessionId = null;
+  summaryVisible = false;
+  lastSearchResults = buildSearchResults();
+  persist();
+  $("recordReview").hidden = true;
+  $("workGrid").hidden = true;
+  renderClientList();
+  renderRangeResults();
+  updateSearchGuide();
+  setSyncStatus("已刪除，請同步到 Google Sheets");
+  showToast("已刪除個案，請同步到 Google Sheets");
 }
 
 function exportData() {
@@ -1422,6 +1457,7 @@ function bindEvents() {
   });
   $("backToSearchButton").addEventListener("click", returnToSearch);
   $("newSessionFromReviewButton").addEventListener("click", startReviewFollowUpSession);
+  $("deleteReviewClientButton").addEventListener("click", deleteReviewClient);
   $("addCustomBlockButton").addEventListener("click", addCustomBlock);
   $("customBlockDraft").addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

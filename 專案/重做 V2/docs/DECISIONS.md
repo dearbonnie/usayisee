@@ -63,3 +63,7 @@ Cloud project settings should live in `config.js`, which is intentionally ignore
 ## Google Sheets Sync
 
 Google Sheets sync starts as manual push and pull, not automatic background sync. This is safer for consultation records because the user can export a JSON backup before overwriting either the cloud sheet or the current device.
+
+## Client Deletion
+
+Deleting from search review mode is allowed, but requires entering the client code. This keeps deletion inside the app and avoids manually deleting related rows from Google Sheets.

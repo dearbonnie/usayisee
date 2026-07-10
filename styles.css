@@ -574,7 +574,8 @@ label {
 }
 
 .review-actions .ghost-button,
-.review-actions .primary-button {
+.review-actions .primary-button,
+.review-actions .danger-button {
   min-width: 150px;
 }
 

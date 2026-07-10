@@ -1,10 +1,10 @@
-const CACHE_NAME = "zouzhe-redo-v2-20260710-15";
+const CACHE_NAME = "zouzhe-redo-v2-20260710-16";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=20260710-15",
-  "./app.js?v=20260710-15",
-  "./manifest.webmanifest?v=20260710-15",
+  "./styles.css?v=20260710-16",
+  "./app.js?v=20260710-16",
+  "./manifest.webmanifest?v=20260710-16",
   "./icon.svg",
 ];
 

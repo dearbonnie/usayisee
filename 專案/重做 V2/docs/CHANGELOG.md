@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.3.1 - 2026-07-10
+
+- Added a delete-client action to the search review screen.
+- Requires typing the client code before deleting a reviewed client and all of its sessions.
+- After deletion, the app reminds the user to sync to Google Sheets.
+- Updated cache version to `20260710-16`.
+
 ## v2.3.0 - 2026-07-10
 
 - Added manual Google Sheets sync controls to the sidebar.
