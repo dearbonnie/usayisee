@@ -1,6 +1,6 @@
 # VERSION
 
-Current version: v2.3.2
+Current version: v2.3.3
 
 Date: 2026-07-10
 
@@ -19,7 +19,7 @@ Baseline:
 Cache version:
 
 ```text
-20260710-17
+20260710-18
 ```
 
 Formal sync planning:

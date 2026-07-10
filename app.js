@@ -1,6 +1,6 @@
 const STORAGE_KEY = "zouzhe-app-v2";
 const LEGACY_KEY = "zouzhe-app-v1";
-const APP_VERSION = "v2.3.2";
+const APP_VERSION = "v2.3.3";
 const GOOGLE_SYNC_URL = "https://script.google.com/macros/s/AKfycbyKLJBTYBCkSj2n1yjA2jhAzYypwF_dOSUO0K7nqVBFvF_AQQN-L5taueu0iAmbjy4L/exec";
 
 const blockOptions = [
@@ -744,6 +744,47 @@ function deleteReviewClient() {
   showToast("已刪除個案，請同步到 Google Sheets");
 }
 
+function deleteReviewSession() {
+  const client = state.clients.find((item) => item.id === reviewClientId);
+  if (!client) return;
+  const session = client.sessions.find((item) => item.id === reviewSessionId);
+  if (!session) return;
+
+  if (client.sessions.length <= 1) {
+    showToast("只剩一筆諮詢，請改用刪除個案");
+    return;
+  }
+
+  const code = client.fields.clientCode || "";
+  if (!code) {
+    showToast("此個案缺少代號，未刪除");
+    return;
+  }
+
+  const number = session.fields?.sessionNumber || "1";
+  const date = session.fields?.sessionDate || "未填日期";
+  const typed = prompt(`確定刪除「${code}」第 ${number} 次諮詢？\n日期：${date}\n\n若要刪除，請輸入個案代號：${code}`);
+
+  if (typed === null) return;
+  if (typed.trim() !== code) {
+    showToast("個案代號不一致，未刪除");
+    return;
+  }
+
+  client.sessions = client.sessions.filter((item) => item.id !== session.id);
+  client.updatedAt = new Date().toISOString();
+  reviewSessionId = latestSessionFrom(client.sessions)?.id || client.sessions[0]?.id || null;
+  summaryVisible = false;
+  lastSearchResults = buildSearchResults();
+  persist();
+  renderRecordReview();
+  renderClientList();
+  renderRangeResults();
+  updateSearchGuide();
+  setSyncStatus("已刪除本次諮詢，請同步到 Google Sheets");
+  showToast("已刪除本次諮詢，請同步到 Google Sheets");
+}
+
 function exportData() {
   flushPendingSave();
   syncFromForm();
@@ -1458,6 +1499,7 @@ function bindEvents() {
   $("backToSearchButton").addEventListener("click", returnToSearch);
   $("newSessionFromReviewButton").addEventListener("click", startReviewFollowUpSession);
   $("deleteReviewClientButton").addEventListener("click", deleteReviewClient);
+  $("deleteReviewSessionButton").addEventListener("click", deleteReviewSession);
   $("addCustomBlockButton").addEventListener("click", addCustomBlock);
   $("customBlockDraft").addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

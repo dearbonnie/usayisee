@@ -71,3 +71,7 @@ Deleting from search review mode is allowed, but requires entering the client co
 ## Sync Control Placement
 
 Google Sheets sync controls should stay near the top of the sidebar, not at the bottom. Sync is part of the main cross-device workflow and must remain reachable in short Mac app windows and smaller mobile layouts.
+
+## Session Deletion
+
+A single consultation can be deleted from search review mode when the client has more than one session. Existing session numbers are not automatically renumbered because they are historical consultation labels.

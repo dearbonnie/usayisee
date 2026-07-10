@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.3.3 - 2026-07-10
+
+- Added `刪除本次諮詢` in search review mode.
+- Single-session deletion requires entering the client code and is blocked when the client only has one session.
+- Kept existing consultation numbers unchanged after deleting one session.
+- Updated cache version to `20260710-18`.
+
 ## v2.3.2 - 2026-07-10
 
 - Moved Google Sheets sync controls higher in the sidebar so they remain visible in short Mac app windows.
