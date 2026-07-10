@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v2.3.2 - 2026-07-10
+
+- Moved Google Sheets sync controls higher in the sidebar so they remain visible in short Mac app windows.
+- Added sidebar scrolling as a fallback for small screen heights.
+- Updated cache version to `20260710-17`.
+
 ## v2.3.1 - 2026-07-10
 
 - Added a delete-client action to the search review screen.

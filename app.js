@@ -1,6 +1,6 @@
 const STORAGE_KEY = "zouzhe-app-v2";
 const LEGACY_KEY = "zouzhe-app-v1";
-const APP_VERSION = "v2.3.1";
+const APP_VERSION = "v2.3.2";
 const GOOGLE_SYNC_URL = "https://script.google.com/macros/s/AKfycbyKLJBTYBCkSj2n1yjA2jhAzYypwF_dOSUO0K7nqVBFvF_AQQN-L5taueu0iAmbjy4L/exec";
 
 const blockOptions = [

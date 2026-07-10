@@ -67,3 +67,7 @@ Google Sheets sync starts as manual push and pull, not automatic background sync
 ## Client Deletion
 
 Deleting from search review mode is allowed, but requires entering the client code. This keeps deletion inside the app and avoids manually deleting related rows from Google Sheets.
+
+## Sync Control Placement
+
+Google Sheets sync controls should stay near the top of the sidebar, not at the bottom. Sync is part of the main cross-device workflow and must remain reachable in short Mac app windows and smaller mobile layouts.
