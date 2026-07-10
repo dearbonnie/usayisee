@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#eaf7ee" />
+    <title>你來 我聽 你說 我看見</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260710-14" />
+    <link rel="stylesheet" href="./styles.css?v=20260710-14" />
+  </head>
+  <body>
+    <header class="global-header">
+      <div class="global-title">𓊆ྀི 你來 我聽 ⁺ 你說 我看見 𓊇ྀི</div>
+    </header>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="個案查詢">
+        <button class="primary-button sidebar-new-client" id="headerNewClientButton" type="button" title="建立個案" aria-label="建立個案">
+          <span aria-hidden="true">＋</span>
+          建立個案
+        </button>
+
+        <div class="brand-block">
+          <p class="eyebrow">Intuitive Tarot Counseling</p>
+          <h1>個案查詢</h1>
+        </div>
+
+        <div class="query-row">
+          <input id="keywordInput" type="search" placeholder="關鍵字查詢：姓名、主題、佛教、靈性..." />
+        </div>
+
+        <section class="sidebar-guide" id="sidebarGuide">
+          <strong>先建立個案或諮詢既有資料</strong>
+          <span>可用關鍵字或時間區間找到個案，點進去查看完整資料。</span>
+          <button class="ghost-button compact" id="openSearchResultsButton" type="button" hidden>查看結果</button>
+        </section>
+
+        <section class="sidebar-range" aria-label="時間區間查詢">
+            <p class="eyebrow">Range</p>
+            <h2>查詢時間起訖</h2>
+            <div class="range-presets" aria-label="快速時間範圍">
+              <button class="ghost-button compact" type="button" data-range-preset="3days">三天內</button>
+              <button class="ghost-button compact" type="button" data-range-preset="7days">七天內</button>
+              <button class="ghost-button compact" type="button" data-range-preset="thisMonth">本月</button>
+              <button class="ghost-button compact" type="button" data-range-preset="3months">最近三個月</button>
+              <button class="ghost-button compact" type="button" data-range-preset="thisYear">今年</button>
+              <button class="ghost-button compact" type="button" data-range-preset="clear">清除</button>
+            </div>
+            <label>
+              起始時間
+              <input id="rangeStart" type="date" />
+            </label>
+            <label>
+              結束時間
+              <input id="rangeEnd" type="date" />
+            </label>
+            <button class="ghost-button compact" id="openRangeResultsButton" type="button">查詢時間</button>
+        </section>
+
+        <div class="client-list" id="clientList" hidden></div>
+
+        <div class="sidebar-bottom">
+          <button class="ghost-button" id="exportButton" type="button">匯出備份</button>
+          <label class="ghost-button file-button">
+            匯入備份
+            <input id="importInput" type="file" accept="application/json" />
+          </label>
+          <details class="danger-zone" id="clientManagement" hidden>
+            <summary>個案管理</summary>
+            <button class="danger-button" id="deleteClientButton" type="button">刪除目前個案</button>
+          </details>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <section class="work-grid" id="workGrid" hidden>
+          <section class="panel client-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Profile</p>
+                <h3>個案資料</h3>
+              </div>
+            </div>
+
+            <div class="form-grid two">
+              <label>
+                個案代號
+                <input id="clientCode" type="text" readonly />
+              </label>
+              <label>
+                姓名／稱呼
+                <input id="clientName" type="text" />
+              </label>
+              <label>
+                第幾次諮詢
+                <input id="sessionNumber" type="number" readonly />
+              </label>
+              <label>
+                出生年
+                <input id="birthYear" type="text" inputmode="numeric" />
+              </label>
+              <label>
+                聯繫方式
+                <input id="contactInfo" type="text" />
+              </label>
+              <label>
+                本次日期
+                <input id="sessionDate" type="date" />
+              </label>
+              <label>
+                本次主題
+                <input id="sessionTopic" type="text" />
+              </label>
+            </div>
+
+            <label>
+              當事人想解決的問題
+              <textarea id="presentingIssue" rows="3"></textarea>
+            </label>
+            <label>
+              備註
+              <textarea id="clientNotes" rows="3"></textarea>
+            </label>
+          </section>
+
+          <section class="panel tarot-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Intuitive Tarot</p>
+                <h3>直覺式塔羅牌</h3>
+              </div>
+              <div class="segmented" role="group" aria-label="直覺式塔羅牌張數">
+                <button id="spreadOneButton" type="button">翻一張牌</button>
+                <button id="spreadThreeButton" type="button">翻三張牌</button>
+              </div>
+            </div>
+            <div class="spread-grid" id="spreadGrid"></div>
+          </section>
+
+          <section class="panel session-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Sessions</p>
+                <h3>諮詢紀錄</h3>
+              </div>
+            </div>
+            <div class="session-list" id="sessionList"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Reading 1</p>
+                <h3>生命故事解讀</h3>
+              </div>
+            </div>
+            <label>
+              核心
+              <textarea id="lifeCore" rows="8"></textarea>
+            </label>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Reading 2</p>
+                <h3>模式分析解讀</h3>
+              </div>
+            </div>
+            <label>
+              核心
+              <textarea id="patternCore" rows="8"></textarea>
+            </label>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Reading 3</p>
+                <h3>核心阻塞點解讀</h3>
+              </div>
+            </div>
+            <div class="check-grid" id="blockGrid"></div>
+            <label>
+              自訂核心標籤
+              <div class="inline-input-action">
+                <input id="customBlockDraft" type="text" placeholder="例如：金錢匱乏、親密恐懼、原生家庭" />
+                <button class="ghost-button" id="addCustomBlockButton" type="button">新增</button>
+              </div>
+              <input id="customBlocks" type="hidden" />
+            </label>
+            <label>
+              核心句
+              <textarea id="coreSentence" rows="3"></textarea>
+            </label>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Follow-up</p>
+                <h3>追蹤結果</h3>
+              </div>
+            </div>
+            <div class="form-grid two">
+              <label>
+                哪個舊模式又出現
+                <textarea id="oldPattern" rows="3"></textarea>
+              </label>
+              <label>
+                哪裡有一點不同
+                <textarea id="difference" rows="3"></textarea>
+              </label>
+              <label>
+                哪個策略有效
+                <textarea id="worked" rows="3"></textarea>
+              </label>
+              <label>
+                下一步調整
+                <textarea id="nextAdjustment" rows="3"></textarea>
+              </label>
+            </div>
+          </section>
+
+          <section class="confirm-strip">
+            <button class="ghost-button" id="cancelSessionButton" type="button">取消</button>
+            <span class="save-status" id="saveStatus" role="status" aria-live="polite">已儲存</span>
+            <button class="primary-button" id="confirmSessionButton" type="button">確認</button>
+          </section>
+
+          <section class="panel output-panel" id="summaryPanel" hidden>
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Summary</p>
+                <h3>本次摘要</h3>
+              </div>
+            </div>
+            <pre id="sessionSummary"></pre>
+            <div class="summary-actions">
+              <button class="icon-button copy-icon" id="copySummaryButton" type="button" aria-label="複製摘要" title="複製摘要">⧉</button>
+            </div>
+          </section>
+        </section>
+
+        <section class="record-review" id="recordReview" hidden>
+          <section class="panel review-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Records</p>
+                <h3 id="reviewTitle">諮詢紀錄摘要</h3>
+              </div>
+              <span class="count-pill" id="reviewCount"></span>
+            </div>
+            <div class="review-meta" id="reviewMeta"></div>
+            <div class="review-profile" id="reviewProfile"></div>
+            <div class="review-sections" id="reviewSections"></div>
+            <div class="review-session-nav" id="reviewSessionNav"></div>
+            <div class="review-actions">
+              <button class="ghost-button" id="backToSearchButton" type="button">返回查詢</button>
+              <button class="primary-button" id="newSessionFromReviewButton" type="button">新增諮詢</button>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="clientModal" hidden>
+      <form class="modal" id="clientForm" aria-label="建立個案">
+        <div class="modal-head">
+          <div>
+            <p class="eyebrow">New Client</p>
+            <h2>建立個案</h2>
+          </div>
+          <button class="icon-button" id="closeClientModalButton" type="button" aria-label="關閉">×</button>
+        </div>
+
+        <div class="form-grid two">
+          <label>
+            姓名／稱呼
+            <input id="modalClientName" type="text" autocomplete="off" />
+          </label>
+          <label>
+            聯繫方式
+            <input id="modalContactInfo" type="text" autocomplete="off" />
+          </label>
+          <label>
+            出生年
+            <input id="modalBirthYear" type="text" inputmode="numeric" autocomplete="off" />
+          </label>
+        </div>
+
+        <label>
+          備註
+          <textarea id="modalClientNotes" rows="3"></textarea>
+        </label>
+
+        <div class="modal-actions">
+          <button class="ghost-button" id="cancelClientModalButton" type="button">取消</button>
+          <button class="primary-button" type="submit">確認</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="results-backdrop" id="searchResultsModal" hidden>
+      <section class="results-panel" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+        <div class="results-head">
+          <div>
+            <p class="eyebrow">Search Results</p>
+            <h2 id="resultsTitle">搜尋結果</h2>
+          </div>
+          <button class="icon-button" id="closeSearchResultsButton" type="button" aria-label="關閉">×</button>
+        </div>
+        <div class="results-toolbar">
+          <span id="resultsCountText"></span>
+          <span>排序：最近諮詢在前</span>
+        </div>
+        <div class="results-list" id="searchResultsList"></div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js?v=20260710-14"></script>
+  </body>
+</html>
