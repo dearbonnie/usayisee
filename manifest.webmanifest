@@ -1,0 +1,17 @@
+{
+  "name": "你來 我聽 你說 我看見",
+  "short_name": "我看見",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eaf7ee",
+  "theme_color": "#eaf7ee",
+  "description": "直覺式塔羅牌、個案紀錄與多次諮詢管理工具",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

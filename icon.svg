@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="你來 我聽 你說 我看見">
+  <rect width="512" height="512" rx="96" fill="#eaf7ee"/>
+  <path d="M118 150h276v212H118z" fill="#fbfff8" stroke="#6fa883" stroke-width="18"/>
+  <path d="M156 188h200M156 236h200M156 284h138" stroke="#80aeb6" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="360" cy="314" r="42" fill="#d8bf7b"/>
+  <path d="M329 314h62M360 283v62" stroke="#fbfff8" stroke-width="14" stroke-linecap="round"/>
+</svg>
