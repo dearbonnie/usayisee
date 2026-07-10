@@ -59,3 +59,7 @@ The next production direction is Supabase-backed sync, but the UI should continu
 ## Sync Secrets
 
 Cloud project settings should live in `config.js`, which is intentionally ignored by Git. The repository may include `config.example.js`, but must not include service role keys, database passwords, or private recovery credentials.
+
+## Google Sheets Sync
+
+Google Sheets sync starts as manual push and pull, not automatic background sync. This is safer for consultation records because the user can export a JSON backup before overwriting either the cloud sheet or the current device.

@@ -1,5 +1,7 @@
 const STORAGE_KEY = "zouzhe-app-v2";
 const LEGACY_KEY = "zouzhe-app-v1";
+const APP_VERSION = "v2.3.0";
+const GOOGLE_SYNC_URL = "https://script.google.com/macros/s/AKfycbyKLJBTYBCkSj2n1yjA2jhAzYypwF_dOSUO0K7nqVBFvF_AQQN-L5taueu0iAmbjy4L/exec";
 
 const blockOptions = [
   "自我價值",
@@ -331,6 +333,11 @@ function flushPendingSave() {
 
 function setSaveStatus(message) {
   const status = $("saveStatus");
+  if (status) status.textContent = message;
+}
+
+function setSyncStatus(message) {
+  const status = $("syncStatus");
   if (status) status.textContent = message;
 }
 
@@ -739,6 +746,115 @@ function importData(file) {
     $("importInput").value = "";
   };
   reader.readAsText(file);
+}
+
+function buildSyncPayload() {
+  flushPendingSave();
+  syncFromForm();
+  persist();
+  return {
+    clients: state.clients,
+    activeClientId,
+    activeSessionId,
+  };
+}
+
+async function pushToGoogleSheets() {
+  if (!confirm("同步到 Google Sheets 會用目前這台裝置的資料覆蓋雲端表格。建議先按「匯出備份」保存一份 JSON。確定要同步？")) return;
+  const payload = buildSyncPayload();
+  setSyncStatus("同步到 Google Sheets 中...");
+
+  try {
+    await fetch(GOOGLE_SYNC_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: JSON.stringify({
+        action: "push",
+        appVersion: APP_VERSION,
+        data: payload,
+      }),
+    });
+    setSyncStatus(`已送出 ${formatDateTime(new Date())}`);
+    showToast("已送出同步");
+  } catch (error) {
+    console.warn(error);
+    setSyncStatus("同步失敗，請稍後再試");
+    showToast("同步失敗");
+  }
+}
+
+async function pullFromGoogleSheets() {
+  if (!confirm("從 Google Sheets 更新會取代目前這台裝置中的資料。請先確認已匯出備份或已同步到雲端。確定要更新？")) return;
+  setSyncStatus("從 Google Sheets 更新中...");
+
+  try {
+    const response = await loadGoogleSyncJsonp();
+    if (!response.ok || !response.data || !Array.isArray(response.data.clients)) {
+      throw new Error(response.error || "Invalid sync response");
+    }
+
+    state = {
+      clients: response.data.clients,
+      activeClientId: null,
+      activeSessionId: null,
+    };
+    state.clients.forEach(normalizeClient);
+    activeClientId = null;
+    activeSessionId = null;
+    reviewClientId = null;
+    reviewSessionId = null;
+    summaryVisible = false;
+    persist();
+    render();
+    setSyncStatus(`已更新 ${formatDateTime(new Date())}`);
+    showToast("已從 Google Sheets 更新");
+  } catch (error) {
+    console.warn(error);
+    setSyncStatus("更新失敗，請確認 Apps Script 已重新部署");
+    showToast("更新失敗");
+  }
+}
+
+function loadGoogleSyncJsonp() {
+  const callbackName = `usayiseeSync_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+  const url = `${GOOGLE_SYNC_URL}?action=pull&callback=${encodeURIComponent(callbackName)}`;
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("Google Sheets sync timeout"));
+    }, 15000);
+
+    function cleanup() {
+      window.clearTimeout(timeout);
+      delete window[callbackName];
+      script.remove();
+    }
+
+    window[callbackName] = (payload) => {
+      cleanup();
+      resolve(payload);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Google Sheets sync script failed"));
+    };
+
+    script.src = url;
+    document.body.appendChild(script);
+  });
+}
+
+function formatDateTime(date) {
+  const dateText = formatDate(date);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${dateText} ${hours}:${minutes}`;
 }
 
 function runKeywordQuery() {
@@ -1285,6 +1401,8 @@ function bindEvents() {
   $("deleteClientButton").addEventListener("click", deleteClient);
   $("exportButton").addEventListener("click", exportData);
   $("importInput").addEventListener("change", (event) => importData(event.target.files[0]));
+  $("pushSyncButton").addEventListener("click", pushToGoogleSheets);
+  $("pullSyncButton").addEventListener("click", pullFromGoogleSheets);
   $("keywordInput").addEventListener("input", () => {
     listVisible = Boolean($("keywordInput").value.trim());
     lastSearchResults = buildSearchResults();

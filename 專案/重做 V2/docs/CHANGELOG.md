@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.3.0 - 2026-07-10
+
+- Added manual Google Sheets sync controls to the sidebar.
+- Connected the app to the user's deployed Apps Script web app URL.
+- Added JSONP pull support to the Apps Script backend template for GitHub Pages compatibility.
+- Updated cache version to `20260710-15`.
+
 ## v2.2.0 - 2026-07-10
 
 - Added the formal sync preparation documents for Supabase.

@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#eaf7ee" />
     <title>你來 我聽 你說 我看見</title>
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260710-14" />
-    <link rel="stylesheet" href="./styles.css?v=20260710-14" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260710-15" />
+    <link rel="stylesheet" href="./styles.css?v=20260710-15" />
   </head>
   <body>
     <header class="global-header">
@@ -61,6 +61,14 @@
         <div class="client-list" id="clientList" hidden></div>
 
         <div class="sidebar-bottom">
+          <section class="sync-box" aria-label="Google Sheets 同步">
+            <div>
+              <strong>Google 同步</strong>
+              <span id="syncStatus">尚未同步</span>
+            </div>
+            <button class="ghost-button" id="pushSyncButton" type="button">同步到 Google Sheets</button>
+            <button class="ghost-button" id="pullSyncButton" type="button">從 Google Sheets 更新</button>
+          </section>
           <button class="ghost-button" id="exportButton" type="button">匯出備份</button>
           <label class="ghost-button file-button">
             匯入備份
@@ -320,6 +328,6 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./app.js?v=20260710-14"></script>
+    <script src="./app.js?v=20260710-15"></script>
   </body>
 </html>
