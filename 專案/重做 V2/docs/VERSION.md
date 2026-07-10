@@ -1,6 +1,6 @@
 # VERSION
 
-Current version: v2.1.4
+Current version: v2.2.0
 
 Date: 2026-07-10
 
@@ -20,4 +20,12 @@ Cache version:
 
 ```text
 20260710-14
+```
+
+Formal sync planning:
+
+```text
+/Users/bonniechang/Documents/你說 我看見/docs/SYNC_PLAN.md
+/Users/bonniechang/Documents/你說 我看見/docs/SUPABASE_SETUP.md
+/Users/bonniechang/Documents/你說 我看見/supabase/schema.sql
 ```

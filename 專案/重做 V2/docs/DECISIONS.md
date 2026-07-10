@@ -51,3 +51,11 @@ When a client is opened from search results, the app treats it as review mode. T
 ## Intuitive Tarot Deck
 
 The current random draw list is provisional and must not be treated as confirmed Mangala `直覺式塔羅牌` card naming. It should be replaced only after the exact 78 card names from the correct Mangala source are confirmed.
+
+## Formal Sync Mode
+
+The next production direction is Supabase-backed sync, but the UI should continue to depend on a repository interface instead of calling Supabase directly. The first sync release should use explicit manual sync controls and conflict prompts, not silent automatic merging.
+
+## Sync Secrets
+
+Cloud project settings should live in `config.js`, which is intentionally ignored by Git. The repository may include `config.example.js`, but must not include service role keys, database passwords, or private recovery credentials.

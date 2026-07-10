@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.2.0 - 2026-07-10
+
+- Added the formal sync preparation documents for Supabase.
+- Added a first-pass PostgreSQL schema with Row Level Security policies.
+- Added `config.example.js` and `.gitignore` so cloud settings are not accidentally committed.
+- Kept the live app behavior on localStorage until sync is explicitly implemented and tested.
+
 ## v2.1.4 - 2026-07-10
 
 - Fixed review-mode locking for checkbox controls, including `核心阻塞點解讀`.
